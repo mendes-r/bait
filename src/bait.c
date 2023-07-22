@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DEBUG "Debug: "
-#define BUFSIZE 10
+#define BUFSIZE 100
+#define CONFIG_FILE "/.bait.conf"
 
 void help_page(void);
 void catch(void);
@@ -11,34 +11,45 @@ void release(void);
 void grab(void);
 
 void bait(char *cmd){
-  printf("%s%s\n", DEBUG, cmd);
-
   if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "") == 0){
-    catch();
     printf("catch\n");
+    catch();
   } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "-r") == 0){
-    release();
     printf("release\n");
+    release();
   } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "-g") == 0) {
-    grab();
     printf("grab\n");
+    grab();
   } else {
     help_page();
   }
-
 }
 
 void catch(void){
+  char *home_dir;
+  FILE *file;
 
+  // check the getenv result and size
+  home_dir = getenv("HOME");
+  // use safer way to concat a string
+  strcat(home_dir, CONFIG_FILE);
+
+  printf("DEBUG: Complete directory is %s\n", home_dir);
+
+  file = fopen(home_dir, "a");
+  if (file == NULL){
+    // deal with no file
+    fprintf(stderr, "File open error.\n");
+  }
+
+  fprintf(file, "%s\n", home_dir);
+  
+  fclose(file);
 }
 
-void release(void){
+void release(void){}
 
-}
-
-void grab(void){
-
-}
+void grab(void){}
 
 void help_page(void){
   printf("\n");
@@ -61,12 +72,10 @@ int main(int argc, char *argv[]){
     cmd = argv[1];
   }
 
-  printf("%s%s\n", DEBUG, cmd);
-
   if (strlen(cmd) > BUFSIZE) {
     cmd = "help";
   }
- 
+  
   bait(cmd);
   return EXIT_SUCCESS;
 }
