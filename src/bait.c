@@ -2,16 +2,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <display.h>
 
 #define BUFSIZE 100
-#define CONFIG_FILE "/.bait.conf"
 
 void help_page(void);
 void catch(void);
 void release(void);
 void grab(void);
 void display(void);
-const char *get_config_dir(void);
+FILE *get_config(void);
 
 void bait(char *cmd){
   if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "") == 0){
@@ -29,11 +29,31 @@ void bait(char *cmd){
 }
 
 void catch(void){
-  const char *config_dir;
   char curr_dir[BUFSIZE];
   FILE *file;
 
-  config_dir = get_config_dir();
+  file = get_config();
+
+  // TODO check first if already exist
+  if(getcwd(curr_dir, sizeof(curr_dir)) == NULL){
+    fprintf(stderr, "Error retrieving currrent dir.\n");
+    exit(1);
+  }
+
+  fprintf(file, "%s\n", curr_dir);
+  fclose(file);
+}
+
+FILE *get_config(void){
+  FILE *file;
+  char *config_dir;
+  const char *config_name = "/.baitrc";
+
+  // TODO check the getenv result and size
+  config_dir = getenv("HOME");
+ 
+  // TODO use safer way to concat a string
+  strcat(config_dir, config_name);
 
   printf("DEBUG: Complete directory is %s\n", config_dir);
 
@@ -43,36 +63,16 @@ void catch(void){
     fprintf(stderr, "File open error.\n");
     exit(1);
   }
-  
-  // TODO check first if already exist
-  if(getcwd(curr_dir, sizeof(curr_dir)) == NULL){
-    fprintf(stderr, "Error retrieving currrent dir.\n");
-    exit(1);
-  }
 
-  fprintf(file, "%s\n", curr_dir);
-  
-  fclose(file);
-}
-
-const char *get_config_dir(void){
-  const char *c_config_dir;
-  char *config_dir;
-  // TODO check the getenv result and size
-  config_dir = getenv("HOME");
-  // TODO use safer way to concat a string
-  strcat(config_dir, CONFIG_FILE);
-  c_config_dir = config_dir;
-  return c_config_dir;
+  return file;
 }
 
 void release(void){
-  display();
   // TODO one specific entry not all
 }
 
 void grab(void){
-  display();
+  draw();
   // TODO grab one entry
 }
 
@@ -88,10 +88,6 @@ void help_page(void){
   printf("\trelease | -r\n");
   printf("\tgrab | -g ... press 'q' to exit\n");
   printf("\n");
-}
-
-void display(void){
-  // TODO window in the middle of the terminal screen
 }
 
 int main(int argc, char *argv[]){
