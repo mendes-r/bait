@@ -10,6 +10,8 @@ void help_page(void);
 void catch(void);
 void release(void);
 void grab(void);
+void display(void);
+const char *get_config_dir(void);
 
 void bait(char *cmd){
   if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "") == 0){
@@ -27,24 +29,22 @@ void bait(char *cmd){
 }
 
 void catch(void){
-  char *home_dir;
+  const char *config_dir;
   char curr_dir[BUFSIZE];
   FILE *file;
 
-  // check the getenv result and size
-  home_dir = getenv("HOME");
-  // use safer way to concat a string
-  strcat(home_dir, CONFIG_FILE);
+  config_dir = get_config_dir();
 
-  printf("DEBUG: Complete directory is %s\n", home_dir);
+  printf("DEBUG: Complete directory is %s\n", config_dir);
 
-  file = fopen(home_dir, "a");
+  file = fopen(config_dir, "a");
   if (file == NULL){
-    // deal with no file
+    // TODO deal with no file
     fprintf(stderr, "File open error.\n");
     exit(1);
   }
-
+  
+  // TODO check first if already exist
   if(getcwd(curr_dir, sizeof(curr_dir)) == NULL){
     fprintf(stderr, "Error retrieving currrent dir.\n");
     exit(1);
@@ -55,9 +55,26 @@ void catch(void){
   fclose(file);
 }
 
-void release(void){}
+const char *get_config_dir(void){
+  const char *c_config_dir;
+  char *config_dir;
+  // TODO check the getenv result and size
+  config_dir = getenv("HOME");
+  // TODO use safer way to concat a string
+  strcat(config_dir, CONFIG_FILE);
+  c_config_dir = config_dir;
+  return c_config_dir;
+}
 
-void grab(void){}
+void release(void){
+  display();
+  // TODO one specific entry not all
+}
+
+void grab(void){
+  display();
+  // TODO grab one entry
+}
 
 void help_page(void){
   printf("\n");
@@ -71,6 +88,10 @@ void help_page(void){
   printf("\trelease | -r\n");
   printf("\tgrab | -g ... press 'q' to exit\n");
   printf("\n");
+}
+
+void display(void){
+  // TODO window in the middle of the terminal screen
 }
 
 int main(int argc, char *argv[]){
