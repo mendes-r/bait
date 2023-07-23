@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <unistd.h>
 
 #define BUFSIZE 100
 #define CONFIG_FILE "/.bait.conf"
@@ -27,6 +28,7 @@ void bait(char *cmd){
 
 void catch(void){
   char *home_dir;
+  char curr_dir[BUFSIZE];
   FILE *file;
 
   // check the getenv result and size
@@ -40,9 +42,15 @@ void catch(void){
   if (file == NULL){
     // deal with no file
     fprintf(stderr, "File open error.\n");
+    exit(1);
   }
 
-  fprintf(file, "%s\n", home_dir);
+  if(getcwd(curr_dir, sizeof(curr_dir)) == NULL){
+    fprintf(stderr, "Error retrieving currrent dir.\n");
+    exit(1);
+  }
+
+  fprintf(file, "%s\n", curr_dir);
   
   fclose(file);
 }
