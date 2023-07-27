@@ -1,8 +1,8 @@
 IDIR=../include
 
 CC=gcc
-CFLAGS=-I$(IDIR)
-DEPS=$(IDIR)/display.h
+CFLAGS=-I$(IDIR) -Wall -pedantic -std=c99
+DEPS=$(IDIR)/. 
 OBJ=bait.c display.c
 EXEC=bait.o
 

@@ -1,26 +1,43 @@
 #include <stdio.h>
+#include <string.h>
 
 #include <display.h>
+#include <ascii_codes.h>
 
-void init_frame(Frame *f){
-  f->row=1;
-  f->col=1;
-  f->pad[0]=0;
-  f->pad[1]=0;
-  f->pad[2]=0;
-  f->pad[3]=0;
-  f->marg[0]=0;
-  f->marg[1]=0;
-  f->marg[2]=0;
-  f->marg[3]=0;
-  f->content="";
+void init_menu(Menu *m){
+  m->row=1;
+  m->col=1;
+  m->pad[0]=0;
+  m->pad[1]=0;
+  m->pad[2]=0;
+  m->pad[3]=0;
+  m->marg[0]=0;
+  m->marg[1]=0;
+  m->marg[2]=0;
+  m->marg[3]=0;
+  m->select=0;
+  m->content="";
 }
 
-void draw(Frame *f){
-  printf("DRAWING FRAME\n");
-  printf("SIZE = row: %d; col: %d\n", f->row, f->col);
-  printf("CONTENT:\n%s\n", f->content);
-  // TODO save window current-view
-  // TODO draw the bait-frame on top of the current-view
-  // TODO re-do the current-view
+void _init_draw(){
+  printf("%s", FG_RED_N);
 }
+
+void _reset_draw(){
+  printf("%s", A_RESET);
+}
+
+void draw(Menu *m){
+  char *line;
+
+  _init_draw();
+
+  line = strtok(m->content, "\r\n");
+  while (line != NULL){
+    printf("%s\n", line);
+    line = strtok(NULL, "\r\n");
+  }
+
+  _reset_draw();
+}
+

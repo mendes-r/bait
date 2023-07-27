@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+#include <termios.h>
 
 #include <display.h>
 
@@ -12,22 +13,19 @@ void help_page(void);
 void catch(void);
 void release(void);
 void grab(void);
-void display(void);
 FILE *get_data(const char * restrict mode);
+int get_input();
 
 char *cmd;
 
 void bait(){
   if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "") == 0){
-    printf("catch\n");
     catch();
   } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "-r") == 0){
-    printf("release\n");
     release();
-  } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "-g") == 0) {
-    printf("grab\n");
+  } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "-g") == 0){
     grab();
-  } else {
+  } else{
     help_page();
   }
 }
@@ -39,8 +37,8 @@ void catch(void){
   file = get_data("a");
 
   // TODO check first if already exist
-  if(getcwd(curr_dir, sizeof(curr_dir)) == NULL){
-    fprintf(stderr, "Error retrieving currrent dir.\n");
+  if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
+    fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
 
@@ -53,40 +51,84 @@ void release(void){
 }
 
 void grab(void){
-  // TODO grab one entry
-  
   FILE *file;
-  Frame frame;
+  Menu menu;
   long file_size;
   char *buffer;
 
   file = get_data("r");
 
-  // get file content
-  fseek(file, 0L, SEEK_END);
+  fseek(file, 0, SEEK_END);
   file_size = ftell(file);
-  rewind(file);
+  fseek(file, 0, SEEK_SET);
+  buffer = malloc(file_size);
 
-  buffer = calloc(1, file_size+1);
-  if (!buffer) {
-    fclose(file); 
-    fprintf(stderr, "Error allocating memory.\n"); 
+  // TODO check buffer
+  if (buffer == NULL){
+    fprintf(stderr, "Error allocating memory for buffer.\n");
+    fclose(file);
     exit(1);
   }
 
-  if(1 != fread(buffer, file_size, 1, file)) {
-    fclose(file); 
-    free(buffer); 
-    fprintf(stderr, "Error retrieving file content.\n");
+  // TODO check read file to buffer
+  if (fread(buffer, 1, file_size, file) != file_size){
+    fprintf(stderr, "Reading file.\n");
+    fclose(file);
+    free(buffer);
     exit(1);
   }
+  
+  init_menu(&menu);
+  menu.content = buffer;
+  
+  while (1){
+    int input;
 
-  init_frame(&frame);
-  frame.content = buffer;
-  draw(&frame);
+    menu.select = 1;
+    draw(&menu);
+
+    input = get_input();
+
+    printf("INPUT: %c\n", input);
+
+    switch(input){
+        case 'k':
+          printf("UP\n");
+          break;
+        case 'j':
+          printf("DOWN\n");
+          break;
+        case 'l':
+          printf("RIGHT\n");
+          break;
+        case 'h':
+          printf("LEFT\n");
+          break;
+      }
+
+    break;
+  }
 
   fclose(file);
   free(buffer);
+}
+
+int get_input(){
+  // src: https://stackoverflow.com/questions/1798511/how-to-avoid-pressing-enter-with-getchar-for-reading-a-single-character-only
+  int c;
+  static struct termios oldattr, newattr;
+
+  tcgetattr(STDIN_FILENO, &oldattr);
+  newattr = oldattr;
+  newattr.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
+
+  if ((c=getchar()) == 'q'){
+    exit(0);
+  }
+  
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+  return c;
 }
 
 void help_page(void){
@@ -113,8 +155,6 @@ FILE *get_data(const char * restrict mode){
  
   // TODO use safer way to concat a string
   strcat(config_dir, config_name);
-
-  printf("DEBUG: Complete directory is %s\n", config_dir);
 
   file = fopen(config_dir, mode);
   if (file == NULL){
