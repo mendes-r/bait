@@ -4,6 +4,9 @@
 #include <display.h>
 #include <ascii_codes.h>
 
+#define clear() printf("\033[H\033[J")
+#define gotoxy(x,y) printf("\033[%d;%dH", (y), (x))
+
 void init_menu(Menu *m){
   m->row=1;
   m->col=1;
@@ -17,6 +20,7 @@ void init_menu(Menu *m){
   m->marg[3]=0;
   m->select=0;
   m->content="";
+  m->content_size=0;
 }
 
 void _init_draw(){
@@ -29,13 +33,23 @@ void _reset_draw(){
 
 void draw(Menu *m){
   char *line;
-
+  int index = 0;
+  char tmp[m->content_size];
+  
+  strcpy(tmp, m->content);
+  
+  clear();
   _init_draw();
 
-  line = strtok(m->content, "\r\n");
+  line = strtok(tmp, ",");
   while (line != NULL){
-    printf("%s\n", line);
-    line = strtok(NULL, "\r\n");
+    if(m->select == index) {
+      printf("[%s]\n", line);
+    } else {
+      printf("%s\n", line);
+    }
+    index++;
+    line = strtok(NULL, ",");
   }
 
   _reset_draw();

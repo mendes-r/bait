@@ -20,3 +20,6 @@ r: run
 
 c: run
 	@./$(EXEC)
+
+h: run
+	@./$(EXEC) -h

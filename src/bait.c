@@ -70,43 +70,32 @@ void grab(void){
     exit(1);
   }
 
-  // TODO check read file to buffer
-  if (fread(buffer, 1, file_size, file) != file_size){
-    fprintf(stderr, "Reading file.\n");
-    fclose(file);
-    free(buffer);
-    exit(1);
-  }
+  // TODO check
+  fgets(buffer, file_size, file);
   
   init_menu(&menu);
   menu.content = buffer;
-  
+  menu.content_size = file_size;
+
   while (1){
     int input;
 
-    menu.select = 1;
+    printf("TEST: %s\n", buffer);
     draw(&menu);
 
+    printf("INPUT: %c\n", input);
     input = get_input();
 
-    printf("INPUT: %c\n", input);
-
     switch(input){
-        case 'k':
-          printf("UP\n");
-          break;
-        case 'j':
-          printf("DOWN\n");
-          break;
-        case 'l':
-          printf("RIGHT\n");
-          break;
-        case 'h':
-          printf("LEFT\n");
-          break;
-      }
-
-    break;
+      case 'k':
+        menu.select++;
+        break;
+      case 'j':
+        menu.select--; 
+        break;
+      case 'q':
+        exit(0); 
+    }
   }
 
   fclose(file);
@@ -123,10 +112,9 @@ int get_input(){
   newattr.c_lflag &= ~(ICANON | ECHO);
   tcsetattr(STDIN_FILENO, TCSANOW, &newattr);
 
-  if ((c=getchar()) == 'q'){
-    exit(0);
-  }
+  c=getchar();
   
+  //TODO This command needs to always run, even after a KILL SIGN
   tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
   return c;
 }

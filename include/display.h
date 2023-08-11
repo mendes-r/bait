@@ -7,6 +7,7 @@ typedef struct{
   unsigned int marg[4];
   char *content;
   unsigned int select;
+  unsigned int content_size;
 }Menu;
 
 void init_menu(Menu *f);
