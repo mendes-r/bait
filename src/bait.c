@@ -55,6 +55,7 @@ void grab(void){
   Menu menu;
   long file_size;
   char *buffer;
+  short found = 0;
 
   file = get_data("r");
 
@@ -74,28 +75,28 @@ void grab(void){
   fgets(buffer, file_size, file);
   
   init_menu(&menu);
+
   menu.content = buffer;
   menu.content_size = file_size;
 
-  while (1){
-    int input;
-
-    printf("TEST: %s\n", buffer);
-    draw(&menu);
-
-    printf("INPUT: %c\n", input);
+  draw(&menu);
+  
+  while (!found){
+    int input, i, nr_items;
     input = get_input();
+    
+    printf("Input was %d\n", input);
+    nr_items = menu.nr_items;
 
-    switch(input){
-      case 'k':
-        menu.select++;
+
+    for (i = 0; i < nr_items; i++) {
+      if (input == i) {
+        printf("Change to dir nr. %d\n", i);
+        found = 1;
         break;
-      case 'j':
-        menu.select--; 
-        break;
-      case 'q':
-        exit(0); 
+      }
     }
+    
   }
 
   fclose(file);
@@ -116,7 +117,7 @@ int get_input(){
   
   //TODO This command needs to always run, even after a KILL SIGN
   tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
-  return c;
+  return (c - 48);
 }
 
 void help_page(void){
