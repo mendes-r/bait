@@ -4,6 +4,7 @@
 
 typedef struct{
   unsigned int n_items;
+  // TODO linked list
   char *content[MAX_SIZE];
 }Menu;
 

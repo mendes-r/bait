@@ -41,13 +41,36 @@ void catch(void){
     fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
-
+  printf("DEBUG: %s\n", curr_dir);
   fprintf(file, "%s\n", curr_dir);
   fclose(file);
 }
 
 void release(void){
-  // TODO one specific entry not all
+  FILE *file;
+  Menu menu;
+  short found = 0;
+
+  file = get_data("r");
+
+  init_menu(&menu, file);
+  draw(&menu);
+  
+  while (!found){
+    int input;
+    input = get_input();
+    
+    if (input < menu.n_items){
+      // TODO remove string from file
+      // TODO implement linked list instead of array
+      found = 1;
+      break;
+    }
+    
+  }
+
+  destroy_menu(&menu);
+  fclose(file);
 }
 
 void grab(void){

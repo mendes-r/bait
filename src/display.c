@@ -7,6 +7,7 @@
 #include <ascii_codes.h>
 
 #define ASCII_OFFSET 48
+#define DELIMETER "\n"
 
 void init_menu(Menu *m, FILE *file){
   int max_size, i = 0;
@@ -27,7 +28,7 @@ void init_menu(Menu *m, FILE *file){
   // check if list in file is bigger than allowed size
   max_size = max_size > MAX_SIZE? MAX_SIZE: max_size;
   
-  for (item = strtok(buffer, ","); (item != NULL && i < max_size); item = strtok(NULL, ",")){
+  for (item = strtok(buffer, "\n"); (item != NULL && i < max_size); item = strtok(NULL, "\n")){
     m->content[i] = item;
     i++;
   }
