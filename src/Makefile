@@ -7,24 +7,26 @@ OBJ=bait.c display.c
 EXEC=bait
 DEST=/usr/local/bin
 BASHRC=~/.bashrc
+BIN=../bin/
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 run: $(OBJ)
-	@$(CC) -o $(EXEC) $^ $(CFLAGS)
+	@mkdir -p $(BIN)
+	@$(CC) -o $(BIN)$(EXEC) $^ $(CFLAGS)
 
 g: run
-	@./$(EXEC) -g
+	@$(BIN)$(EXEC) -g
 
 r: run
-	@./$(EXEC) -r
+	@$(BIN)$(EXEC) -r
 
 c: run
-	@./$(EXEC)
+	@$(BIN)$(EXEC)
 
 h: run
-	@./$(EXEC) -h
+	@$(BIN)$(EXEC) -h
 
 install: run
 	strip --strip-all ./$(EXEC)

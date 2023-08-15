@@ -35,14 +35,14 @@ void catch(void){
   FILE *file;
 
   file = get_data("a");
-
+  
   // TODO check first if already exist
   if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
     fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
-  printf("DEBUG: %s\n", curr_dir);
-  fprintf(file, "%s\n", curr_dir);
+
+  fprintf(file, "%s,", curr_dir);
   fclose(file);
 }
 
