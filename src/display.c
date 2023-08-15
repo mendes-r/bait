@@ -1,13 +1,44 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include <display.h>
 #include <ascii_codes.h>
 
-void init_menu(Menu *m){
-  m->content = "";
-  m->content_size = 0;
-  m->nr_items = 0;
+#define ASCII_OFFSET 48
+
+void init_menu(Menu *m, FILE *file){
+  int max_size, i = 0;
+  long size;
+  char *item; 
+  char *env;
+
+  fseek(file, 0, SEEK_END);
+  size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  char *buffer= (char *) malloc(size);
+  fgets(buffer, size, file);
+
+  env = getenv("BAIT_LIST_SIZE");
+  max_size = (int) *env - ASCII_OFFSET;
+
+  // check if list in file is bigger than allowed size
+  max_size = max_size > MAX_SIZE? MAX_SIZE: max_size;
+  
+  for (item = strtok(buffer, ","); (item != NULL && i < max_size); item = strtok(NULL, ",")){
+    m->content[i] = item;
+    i++;
+  }
+  m->n_items = i; 
+  // TODO Because cannot persist the first token
+  m->content[0] = realloc(buffer, strlen(buffer));
+}
+
+void destroy_menu(Menu *m){
+  // TODO
+  free(m->content[0]);
 }
 
 void _init_draw(){
@@ -19,22 +50,11 @@ void _reset_draw(){
 }
 
 void draw(Menu *m){
-  char *line;
-  char tmp[m->content_size];
-  int index = 0;
-
-  strcpy(tmp, m->content);
-  
   _init_draw();
 
-  line = strtok(tmp, ",");
-  while (line != NULL){
-    printf("[%d] %s\n", index, line);
-    line = strtok(NULL, ",");
-    index++;
+  for (int i = 0; i < m->n_items; i++){
+    printf("[%d] %s\n", i, m->content[i]);
   }
-  
-  m->nr_items = index;
 
   _reset_draw();
 }

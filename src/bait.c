@@ -53,45 +53,20 @@ void release(void){
 void grab(void){
   FILE *file;
   Menu menu;
-  long file_size;
-  char *buffer;
   short found = 0;
 
   file = get_data("r");
 
-  fseek(file, 0, SEEK_END);
-  file_size = ftell(file);
-  fseek(file, 0, SEEK_SET);
-  buffer = malloc(file_size);
-
-  // TODO check buffer
-  if (buffer == NULL){
-    fprintf(stderr, "Error allocating memory for buffer.\n");
-    fclose(file);
-    exit(1);
-  }
-
-  // TODO check
-  fgets(buffer, file_size, file);
-  
-  init_menu(&menu);
-
-  menu.content = buffer;
-  menu.content_size = file_size;
-
+  init_menu(&menu, file);
   draw(&menu);
   
   while (!found){
-    int input, i, nr_items;
+    int input;
     input = get_input();
     
-    printf("Input was %d\n", input);
-    nr_items = menu.nr_items;
-
-
-    for (i = 0; i < nr_items; i++) {
+    for (int i = 0; i < menu.n_items; i++){
       if (input == i) {
-        printf("Change to dir nr. %d\n", i);
+        printf("cd %s\n", menu.content[i]);
         found = 1;
         break;
       }
@@ -99,8 +74,8 @@ void grab(void){
     
   }
 
+  destroy_menu(&menu);
   fclose(file);
-  free(buffer);
 }
 
 int get_input(){
@@ -117,6 +92,8 @@ int get_input(){
   
   //TODO This command needs to always run, even after a KILL SIGN
   tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
+
+  // ANSII offset
   return (c - 48);
 }
 
