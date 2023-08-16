@@ -13,10 +13,14 @@ void rm_content(int i){
   //TODO
 }
 
-FILE *get_content(const char * restrict mode){
+int get_content(char *content[], int max_size){
   FILE *file;
   char *config_dir;
-
+  char *buffer;
+  char *item;
+  long size;
+  int i = 0;
+  
   config_dir = getenv(HOME);
   if (config_dir == NULL){
     perror("Home directory not retrieved.\n");
@@ -25,12 +29,27 @@ FILE *get_content(const char * restrict mode){
  
   strcat(config_dir, BAIT_RC);
 
-  file = fopen(config_dir, mode);
+  file = fopen(config_dir, "r");
   if (file == NULL){
     perror("Error opening file in home directory.\n");
     exit(1);
   }
 
-  return file;
+  fseek(file, 0, SEEK_END);
+  size = ftell(file);
+  fseek(file, 0, SEEK_SET);
+
+  buffer= (char *) malloc(size);
+  fgets(buffer, size, file);
+
+  for (item = strtok(buffer, ","); (item != NULL && i < max_size); item = strtok(NULL, ",")){
+    content[i] = item;
+    i++;
+  }
+
+  // TODO Because cannot persist the first token
+  content[0] = realloc(buffer, strlen(buffer));
+
+  return i;
 }
 

@@ -6,7 +6,6 @@
 #include <termios.h>
 
 #include <display.h>
-#include <fileio.h>
 
 #define BUFSIZE 100
 
@@ -14,7 +13,6 @@ void help_page(void);
 void catch(void);
 void release(void);
 void grab(void);
-FILE *get_content(const char * restrict mode);
 int get_input();
 
 char *cmd;
@@ -33,55 +31,23 @@ void bait(){
 
 void catch(void){
   char curr_dir[BUFSIZE];
-  FILE *file;
 
-  file = get_content("a");
-  
   // TODO check first if already exist
   if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
     fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
-
-  fprintf(file, "%s,", curr_dir);
-  fclose(file);
 }
 
 void release(void){
-  FILE *file;
-  Menu menu;
-  short found = 0;
-
-  file = get_content("r");
-
-  init_menu(&menu, file);
-  draw(&menu);
-  
-  while (!found){
-    int input;
-    input = get_input();
-    
-    if (input < menu.n_items){
-      // TODO remove string from file
-      // TODO implement linked list instead of array
-      found = 1;
-      break;
-    }
-    
-  }
-
-  destroy_menu(&menu);
-  fclose(file);
+  // TODO
 }
 
 void grab(void){
-  FILE *file;
   Menu menu;
   short found = 0;
 
-  file = get_content("r");
-
-  init_menu(&menu, file);
+  init_menu(&menu);
   draw(&menu);
   
   while (!found){
@@ -99,7 +65,6 @@ void grab(void){
   }
 
   destroy_menu(&menu);
-  fclose(file);
 }
 
 int get_input(){

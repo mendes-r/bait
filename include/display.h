@@ -1,15 +1,13 @@
 // ifdef ... endif
 
-#define MAX_SIZE 10
+#include <fileio.h>
 
 typedef struct{
   unsigned int n_items;
-  // TODO linked list
-  char *content[MAX_SIZE];
+  char *content[SIZE_LIMIT];
 }Menu;
 
-void init_menu(Menu *m, FILE *file);
+void init_menu(Menu *m);
 void destroy_menu(Menu *m);
-
 void draw(Menu *f);
 
