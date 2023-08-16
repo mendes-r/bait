@@ -6,6 +6,7 @@
 #include <termios.h>
 
 #include <display.h>
+#include <fileio.h>
 
 #define BUFSIZE 100
 
@@ -13,7 +14,7 @@ void help_page(void);
 void catch(void);
 void release(void);
 void grab(void);
-FILE *get_data(const char * restrict mode);
+FILE *get_content(const char * restrict mode);
 int get_input();
 
 char *cmd;
@@ -34,7 +35,7 @@ void catch(void){
   char curr_dir[BUFSIZE];
   FILE *file;
 
-  file = get_data("a");
+  file = get_content("a");
   
   // TODO check first if already exist
   if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
@@ -51,7 +52,7 @@ void release(void){
   Menu menu;
   short found = 0;
 
-  file = get_data("r");
+  file = get_content("r");
 
   init_menu(&menu, file);
   draw(&menu);
@@ -78,7 +79,7 @@ void grab(void){
   Menu menu;
   short found = 0;
 
-  file = get_data("r");
+  file = get_content("r");
 
   init_menu(&menu, file);
   draw(&menu);
@@ -132,27 +133,6 @@ void help_page(void){
   printf("\trelease | -r\n");
   printf("\tgrab | -g ... press 'q' to exit\n");
   printf("\n");
-}
-
-FILE *get_data(const char * restrict mode){
-  FILE *file;
-  char *config_dir;
-  const char *config_name = "/.baitrc";
-
-  // TODO check the getenv result and size
-  config_dir = getenv("HOME");
- 
-  // TODO use safer way to concat a string
-  strcat(config_dir, config_name);
-
-  file = fopen(config_dir, mode);
-  if (file == NULL){
-    // TODO deal with no file
-    fprintf(stderr, "File open error.\n");
-    exit(1);
-  }
-
-  return file;
 }
 
 int main(int argc, char *argv[]){

@@ -1,3 +1,3 @@
 void add_content(char *item);
-void remove_content(int i);
-void get_content();
+void rm_content(int i);
+FILE *get_content(const char * restrict mode);

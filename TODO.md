@@ -1,3 +1,3 @@
-- Add all the interaction with the file through header fileio
-- Implement remove function
-- Change array of content to linked list
+- [x] Add all the interaction with the file through header fileio
+- [ ] Implement remove function
+- [ ] Change array of content to linked list
