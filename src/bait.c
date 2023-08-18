@@ -5,7 +5,8 @@
 #include <signal.h>
 #include <termios.h>
 
-#include <display.h>
+#include <plotter.h>
+#include <content.h>
 
 #define BUFSIZE 100
 
@@ -30,13 +31,19 @@ void bait(){
 }
 
 void catch(void){
+  Menu menu;
   char curr_dir[BUFSIZE];
+
+  init_menu(&menu);
 
   // TODO check first if already exist
   if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
     fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
+
+  add_content(menu.content, menu.n_items, curr_dir);
+
 }
 
 void release(void){
@@ -45,9 +52,23 @@ void release(void){
 
 void grab(void){
   Menu menu;
+  char *env;
+  int max_size;
   short found = 0;
 
   init_menu(&menu);
+
+  env = getenv("BAIT_LIST_SIZE");
+  if (env == NULL){
+    perror("Environment variable not found.");
+    exit(1);
+  }
+
+  max_size = (int) *env - ASCII_OFFSET;
+  max_size = max_size > SIZE_LIMIT? SIZE_LIMIT: max_size;
+  
+  menu.n_items = import_content(menu.content, max_size);
+
   draw(&menu);
   
   while (!found){
@@ -61,10 +82,7 @@ void grab(void){
         break;
       }
     }
-    
   }
-
-  destroy_menu(&menu);
 }
 
 int get_input(){

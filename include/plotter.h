@@ -1,6 +1,7 @@
 // ifdef ... endif
 
-#include <fileio.h>
+#define SIZE_LIMIT 10
+#define ASCII_OFFSET 48
 
 typedef struct{
   unsigned int n_items;
@@ -8,6 +9,5 @@ typedef struct{
 }Menu;
 
 void init_menu(Menu *m);
-void destroy_menu(Menu *m);
-void draw(Menu *f);
+void draw(Menu *m);
 

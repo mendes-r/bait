@@ -3,7 +3,7 @@ IDIR=../include
 CC=gcc
 CFLAGS=-I$(IDIR) -Wall -pedantic -std=c99
 DEPS=$(IDIR)/. 
-OBJ=bait.c display.c fileio.c
+OBJ=bait.c plotter.c content.c
 EXEC=bait
 DEST=/usr/local/bin
 BASHRC=~/.bashrc

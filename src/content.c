@@ -5,19 +5,17 @@
 #define HOME "HOME"
 #define BAIT_RC "/.baitrc"
 
-void add_content(char *item){
+void add_content(char *content[], int n_items, char *item){
   //TODO
 }
 
-void rm_content(int i){
+void rm_content(char *content[], int i){
   //TODO
 }
 
-int get_content(char *content[], int max_size){
+int import_content(char *content[], int max_size){
   FILE *file;
-  char *config_dir;
-  char *buffer;
-  char *item;
+  char *config_dir, *buffer, *item;
   long size;
   int i = 0;
   
@@ -53,3 +51,6 @@ int get_content(char *content[], int max_size){
   return i;
 }
 
+void export_content(char *content[], int n_items){
+  // TODO
+}

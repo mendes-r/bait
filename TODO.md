@@ -1,3 +1,6 @@
 - [x] Add all the interaction with the file through header fileio
+- [ ] Implement catch function
 - [ ] Implement remove function
+- [x] Use fileio to change content; use display to just draw content; 
+- [x] Change fileio -> content / display -> plotter
 - [ ] Change array of content to linked list
