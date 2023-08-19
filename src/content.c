@@ -5,24 +5,32 @@
 #define HOME "HOME"
 #define BAIT_RC "/.baitrc"
 
-void add_content(char *content[], int n_items, char *item){
-  //TODO
+int add_content(Trap *trap, char *item){
+  if (trap->n_items > SIZE_LIMIT){
+    perror("The number of items was exceeded.");
+    return -1;
+  }
+  trap->content[trap->n_items] = item;
+  trap->n_items = (trap->n_items + 1);
+  return trap->n_items;
 }
 
-void rm_content(char *content[], int i){
-  //TODO
+int rm_content(Trap *trap, int index){
+  //TODO implement and if n_items is already 0
+  trap->n_items = (trap->n_items - 1);
+  return trap->n_items;
 }
 
-int import_content(char *content[], int max_size){
+int import_content(Trap *trap){
   FILE *file;
   char *config_dir, *buffer, *item;
   long size;
-  int i = 0;
+  int index = 0;
   
   config_dir = getenv(HOME);
   if (config_dir == NULL){
     perror("Home directory not retrieved.\n");
-    exit(1);
+    return -1;
   }
  
   strcat(config_dir, BAIT_RC);
@@ -30,7 +38,7 @@ int import_content(char *content[], int max_size){
   file = fopen(config_dir, "r");
   if (file == NULL){
     perror("Error opening file in home directory.\n");
-    exit(1);
+    return -1;
   }
 
   fseek(file, 0, SEEK_END);
@@ -40,17 +48,18 @@ int import_content(char *content[], int max_size){
   buffer= (char *) malloc(size);
   fgets(buffer, size, file);
 
-  for (item = strtok(buffer, ","); (item != NULL && i < max_size); item = strtok(NULL, ",")){
-    content[i] = item;
-    i++;
+  for (item = strtok(buffer, ","); (item != NULL && index < SIZE_LIMIT); item = strtok(NULL, ",")){
+    trap->content[index] = item;
+    index++;
   }
 
   // TODO Because cannot persist the first token
-  content[0] = realloc(buffer, strlen(buffer));
+  trap->content[0] = realloc(buffer, strlen(buffer));
 
-  return i;
+  return index;
 }
 
-void export_content(char *content[], int n_items){
+int export_content(Trap *trap){
   // TODO
+  return -1;
 }

@@ -1,13 +1,9 @@
-// ifdef ... endif
+#ifdef PLOTTER_H
+#define PLOTTER_H
 
-#define SIZE_LIMIT 10
-#define ASCII_OFFSET 48
+/*
+ * Draws to the CLI.
+ */
+void draw(Trap *trap);
 
-typedef struct{
-  unsigned int n_items;
-  char *content[SIZE_LIMIT];
-}Menu;
-
-void init_menu(Menu *m);
-void draw(Menu *m);
-
+#endif /* PLOTTER_H */

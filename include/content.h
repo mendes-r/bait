@@ -1,6 +1,35 @@
+#ifdef CONTENT_H
+#define CONTENT_H
+
 #define SIZE_LIMIT 10
 
-void add_content(char *content[], int n_items, char *item);
-void rm_content(char *content[], int i);
-int import_content(char *content[], int max_size);
-void export_content(char *content[], int n_items);
+typedef struct{
+  unsigned int n_items;
+  char *content[SIZE_LIMIT];
+}Trap;
+
+/* 
+ * Returns the updated number of items.
+ * -1 is return in case of error
+ */
+int add_content(Trap *trap, char *item);
+
+/*
+ * Returns the updated number of items.
+ * -1 is return in case of error
+ */
+int rm_content(Trap *trap, int index);
+
+/*
+ * Returns the number of items retrieved from the persistence source.
+ * -1 is return in case of error
+ */
+int import_content(Trap *trap);
+
+/*
+ * Persists content.
+ * -1 is return in case of error
+ */
+int export_content(Trap *trap);
+
+#endif /* CONTENT_H */
