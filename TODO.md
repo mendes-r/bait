@@ -5,3 +5,4 @@
 - [x] Change fileio -> content / display -> plotter
 - [ ] Add information to the user
 - [ ] Improve TUI
+- [ ] Define the instalation process 

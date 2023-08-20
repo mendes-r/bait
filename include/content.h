@@ -1,7 +1,7 @@
 #ifndef CONTENT_H
 #define CONTENT_H
 
-#define SIZE_LIMIT 10
+#define SIZE_LIMIT 5
 
 typedef struct {
   unsigned int n_items;
