@@ -3,24 +3,25 @@
 #include <string.h>
 #include <unistd.h>
 
-#include <ascii_codes.h>
 #include <plotter.h>
 
-void _init_draw(){
-  printf("%s", FG_RED_N);
-}
-
-void _reset_draw(){
-  printf("%s", A_RESET);
-}
+#define H1() printf("%s", "\033[1;30;107m")
+#define TEXT() printf("%s", "\033[1;37m")
+#define RESET() printf("%s", "\033[0m")
 
 void draw(Trap *trap){
-  _init_draw();
 
   for (int i = 0; i < trap->n_items; i++){
-    printf("[%d] %s\n", i, trap->content[i]);
+    H1();
+      printf("   [%d]", i);
+    RESET();
+      printf(" - ");
+    TEXT();
+      printf("%s", trap->content[i]);
+      printf("\n");
   }
 
-  _reset_draw();
+  printf("\n");
+  RESET();
 }
 
