@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include <ascii_codes.h>
+#include <plotter.h>
 
 void _init_draw(){
   printf("%s", FG_RED_N);

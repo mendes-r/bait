@@ -1,5 +1,7 @@
-#ifdef PLOTTER_H
+#ifndef PLOTTER_H
 #define PLOTTER_H
+
+#include <content.h>
 
 /*
  * Draws to the CLI.

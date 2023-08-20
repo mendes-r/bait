@@ -5,8 +5,8 @@
 #include <signal.h>
 #include <termios.h>
 
-#include <content.h>
 #include <plotter.h>
+#include <content.h>
 
 #define BUFSIZE 500
 
@@ -31,18 +31,18 @@ void bait(){
 }
 
 void catch(void){
-  Trap *trap;
+  Trap trap;
   char curr_dir[BUFSIZE];
 
-  import_content(trap);
+  import_content(&trap);
 
   if (getcwd(curr_dir, sizeof(curr_dir)) == NULL){
     fprintf(stderr, "Error retrieving current dir.\n");
     exit(1);
   }
 
-  add_content(trap, curr_dir);
-  export_content(trap);
+  add_content(&trap, curr_dir);
+  export_content(&trap);
 }
 
 void release(void){
@@ -50,19 +50,19 @@ void release(void){
 }
 
 void grab(void){
-  Trap *trap;
+  Trap trap;
   short found = 0;
 
-  import_content(trap);
-  draw(trap);
+  import_content(&trap);
+  draw(&trap);
   
   while (!found){
     int input;
     input = get_input();
     
-    for (int i = 0; i < trap->n_items; i++){
+    for (int i = 0; i < trap.n_items; i++){
       if (input == i) {
-        printf("cd %s\n", trap->content[i]);
+        printf("cd %s\n", trap.content[i]);
         found = 1;
         break;
       }

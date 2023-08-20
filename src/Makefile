@@ -4,7 +4,7 @@ BIN=../bin/
 CC=gcc
 CFLAGS=-I$(IDIR) -Wall -pedantic -std=c99
 DEPS=$(IDIR)/. 
-OBJ=bait.c plotter.c content.c
+OBJ=bait.c content.c plotter.c
 EXEC=bait
 DEST=/usr/local/bin
 BASHRC=~/.bashrc

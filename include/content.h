@@ -1,12 +1,12 @@
-#ifdef CONTENT_H
+#ifndef CONTENT_H
 #define CONTENT_H
 
 #define SIZE_LIMIT 10
 
-typedef struct{
+typedef struct {
   unsigned int n_items;
   char *content[SIZE_LIMIT];
-}Trap;
+} Trap;
 
 /* 
  * Returns the updated number of items.

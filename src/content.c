@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <content.h>
+
 #define HOME "HOME"
 #define BAIT_RC "/.baitrc"
 
