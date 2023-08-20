@@ -7,6 +7,7 @@
 #define HOME "HOME"
 #define BAIT_RC "/.baitrc"
 #define BUFSIZE 500
+#define EMPTY ""
 
 FILE *_open_file(char *mode){
   FILE * file;
@@ -35,8 +36,17 @@ int add_content(Trap *trap, char *item){
 }
 
 int rm_content(Trap *trap, int index){
-  //TODO implement and if n_items is already 0
+  FILE *file;
+
+  file = _open_file("w");
+  if (file == NULL) {
+    return -1;
+  }
+  
+  trap->content[index] = EMPTY;
   trap->n_items = (trap->n_items - 1);
+
+  fclose(file);
   return 0;
 }
 
@@ -81,7 +91,10 @@ int export_content(Trap *trap){
   }
 
   for(int i = 0; i < trap->n_items; i++){
-    fprintf(file, "%s,", trap->content[i]);
+    char *item = trap->content[i];
+    if (strcmp(item, EMPTY) != 0){
+      fprintf(file, "%s,", trap->content[i]);
+    }
   }
 
   // TODO confirm that file was closed

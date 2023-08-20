@@ -46,6 +46,28 @@ void catch(void){
 }
 
 void release(void){
+  Trap trap;
+  short found = 0;
+
+  import_content(&trap);
+  draw(&trap);
+
+  while (!found){
+    int input;
+    input = get_input();
+    
+    for (int i = 0; i < trap.n_items; i++){
+      if (input == i) {
+        printf("DEBUG: removing [%d] %s\n", i, trap.content[i]); 
+        rm_content(&trap, i);
+        export_content(&trap);
+        found = 1;
+        break;
+      }
+    }
+  }
+
+
   // TODO
 }
 
