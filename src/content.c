@@ -6,6 +6,23 @@
 
 #define HOME "HOME"
 #define BAIT_RC "/.baitrc"
+#define BUFSIZE 500
+
+FILE *_open_file(char *mode){
+  FILE * file;
+  char config_dir[BUFSIZE];
+
+  strcpy(config_dir, getenv(HOME));
+  strcat(config_dir, BAIT_RC);
+
+  file = fopen(config_dir, mode);
+  if (file == NULL){
+    perror("Error opening file in home directory.\n");
+    return NULL;
+  }
+
+  return file;
+}
 
 int add_content(Trap *trap, char *item){
   if (trap->n_items > SIZE_LIMIT){
@@ -25,21 +42,12 @@ int rm_content(Trap *trap, int index){
 
 int import_content(Trap *trap){
   FILE *file;
-  char *config_dir, *buffer, *item;
+  char *buffer, *item;
   long size;
   int index = 0;
   
-  config_dir = getenv(HOME);
-  if (config_dir == NULL){
-    perror("Home directory not retrieved.\n");
-    return -1;
-  }
- 
-  strcat(config_dir, BAIT_RC);
-
-  file = fopen(config_dir, "r");
-  if (file == NULL){
-    perror("Error opening file in home directory.\n");
+  file = _open_file("r"); 
+  if (file == NULL) {
     return -1;
   }
 
@@ -59,10 +67,24 @@ int import_content(Trap *trap){
   trap->content[0] = realloc(buffer, strlen(buffer));
   trap->n_items = index;
 
+  // TODO confirm that file was closed
+  fclose(file);
   return 0;
 }
 
 int export_content(Trap *trap){
-  // TODO
-  return -1;
+  FILE *file;
+
+  file = _open_file("w");
+  if (file == NULL) {
+    return -1;
+  }
+
+  for(int i = 0; i < trap->n_items; i++){
+    fprintf(file, "%s,", trap->content[i]);
+  }
+
+  // TODO confirm that file was closed
+  fclose(file);
+  return 0;
 }
