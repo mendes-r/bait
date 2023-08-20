@@ -14,13 +14,13 @@ int add_content(Trap *trap, char *item){
   }
   trap->content[trap->n_items] = item;
   trap->n_items = (trap->n_items + 1);
-  return trap->n_items;
+  return 0;
 }
 
 int rm_content(Trap *trap, int index){
   //TODO implement and if n_items is already 0
   trap->n_items = (trap->n_items - 1);
-  return trap->n_items;
+  return 0;
 }
 
 int import_content(Trap *trap){
@@ -57,8 +57,9 @@ int import_content(Trap *trap){
 
   // TODO Because cannot persist the first token
   trap->content[0] = realloc(buffer, strlen(buffer));
+  trap->n_items = index;
 
-  return index;
+  return 0;
 }
 
 int export_content(Trap *trap){
