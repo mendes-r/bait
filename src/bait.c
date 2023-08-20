@@ -9,6 +9,7 @@
 #include <content.h>
 
 #define BUFSIZE 500
+#define ASCII_OFFSET 48
 
 void help_page(void);
 void catch(void);
@@ -58,7 +59,6 @@ void release(void){
     
     for (int i = 0; i < trap.n_items; i++){
       if (input == i) {
-        printf("DEBUG: removing [%d] %s\n", i, trap.content[i]); 
         rm_content(&trap, i);
         export_content(&trap);
         found = 1;
@@ -66,9 +66,6 @@ void release(void){
       }
     }
   }
-
-
-  // TODO
 }
 
 void grab(void){
@@ -104,11 +101,9 @@ int get_input(){
 
   c=getchar();
   
-  //TODO This command needs to always run, even after a KILL SIGN
   tcsetattr(STDIN_FILENO, TCSANOW, &oldattr);
 
-  // ANSII offset
-  return (c - 48);
+  return (c - ASCII_OFFSET);
 }
 
 void help_page(void){

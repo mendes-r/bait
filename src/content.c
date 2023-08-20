@@ -44,7 +44,6 @@ int rm_content(Trap *trap, int index){
   }
   
   trap->content[index] = EMPTY;
-  trap->n_items = (trap->n_items - 1);
 
   fclose(file);
   return 0;
