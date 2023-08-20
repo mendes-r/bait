@@ -4,5 +4,5 @@
 - [x] Use fileio to change content; use display to just draw content; 
 - [x] Change fileio -> content / display -> plotter
 - [ ] Add information to the user
-- [ ] Improve TUI
+- [x] Improve TUI
 - [ ] Define the instalation process 

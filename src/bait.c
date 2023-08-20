@@ -10,6 +10,7 @@
 
 #define BUFSIZE 500
 #define ASCII_OFFSET 48
+#define LOWER_Q 65 // 113 ascii - 48 offset
 
 void help_page(void);
 void catch(void);
@@ -49,14 +50,14 @@ void catch(void){
 void release(void){
   Trap trap;
   short found = 0;
+  int input;
 
   import_content(&trap);
   draw(&trap);
 
-  while (!found){
-    int input;
+  do {
     input = get_input();
-    
+
     for (int i = 0; i < trap.n_items; i++){
       if (input == i) {
         rm_content(&trap, i);
@@ -65,18 +66,19 @@ void release(void){
         break;
       }
     }
-  }
+  } while (input != LOWER_Q && !found);
+
 }
 
 void grab(void){
   Trap trap;
+  int input;
   short found = 0;
 
   import_content(&trap);
   draw(&trap);
   
-  while (!found){
-    int input;
+  do {
     input = get_input();
     
     for (int i = 0; i < trap.n_items; i++){
@@ -85,8 +87,9 @@ void grab(void){
         found = 1;
         break;
       }
-    }
-  }
+    } 
+  } while (input != LOWER_Q && !found);
+
 }
 
 int get_input(){
