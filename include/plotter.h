@@ -6,6 +6,12 @@
 /*
  * Draws to the CLI.
  */
-void draw(Trap *trap);
+void draw_grab(Trap *trap);
+
+/*
+ * Draws to the CLI.
+ */
+void draw_release(Trap *trap);
+
 
 #endif /* PLOTTER_H */

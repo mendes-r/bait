@@ -12,6 +12,11 @@
 #define ASCII_OFFSET 48
 #define LOWER_Q 65 // 113 ascii - 48 offset
 
+// src: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+#define SAVE_CURSOR_POS() printf("%s", "\0337");
+#define RESTORE_CURSOR_POS() printf("%s", "\0338");
+#define ERASE_BELOW() printf("%s", "\033[0J");
+
 void help_page(void);
 void catch(void);
 void release(void);
@@ -50,15 +55,17 @@ void catch(void){
 void release(void){
   Trap trap;
   short found = 0;
-  int input;
+  int input, i;
 
   import_content(&trap);
-  draw(&trap);
+
+  SAVE_CURSOR_POS();
+  draw_release(&trap);
 
   do {
     input = get_input();
 
-    for (int i = 0; i < trap.n_items; i++){
+    for (i = 0; i < trap.n_items; i++){
       if (input == i) {
         rm_content(&trap, i);
         export_content(&trap);
@@ -68,28 +75,38 @@ void release(void){
     }
   } while (input != LOWER_Q && !found);
 
+  RESTORE_CURSOR_POS();
+  ERASE_BELOW();
 }
 
 void grab(void){
   Trap trap;
-  int input;
+  int input, i;
+  char *dir;
   short found = 0;
 
   import_content(&trap);
-  draw(&trap);
+
+  SAVE_CURSOR_POS();
+  draw_grab(&trap);
   
   do {
     input = get_input();
     
-    for (int i = 0; i < trap.n_items; i++){
+    for (i = 0; i < trap.n_items; i++){
       if (input == i) {
-        printf("cd %s\n", trap.content[i]);
+        dir = trap.content[i];
         found = 1;
         break;
       }
     } 
   } while (input != LOWER_Q && !found);
+  
+  RESTORE_CURSOR_POS();
+  ERASE_BELOW();
 
+  if (found) 
+    printf("cd %s\n", dir);
 }
 
 int get_input(){
