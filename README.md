@@ -6,7 +6,7 @@ Let's be honest, when using the terminal, there must be just a handful of direct
 
 Instead of typing or looking at the history for the last __cd__ command, why not _catch_ all the most used in a single, and easy to use, space?
 
-Through the _bait_ and catch what you really need.
+Throw the _bait_ and catch what you really need.
 
 ## Description
 
