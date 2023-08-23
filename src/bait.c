@@ -106,7 +106,7 @@ void grab(void){
   ERASE_BELOW();
 
   if (found) 
-    printf("cd %s\n", dir);
+    fprintf(stderr, "cd %s\n", dir);
 }
 
 int get_input(){
