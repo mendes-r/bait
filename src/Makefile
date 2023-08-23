@@ -31,3 +31,4 @@ h: run
 install: run
 	@strip --strip-all ./$(EXEC)
 	mv ./$(EXEC) $(DEST) 
+	echo "alias bait='eval $$(bait 3>&1 1>&2 2>&3)'" >> ~/.bashrc
