@@ -5,6 +5,7 @@
 - [x] Change fileio -> content / display -> plotter
 - [x] Add information to the user
 - [x] Improve TUI
-- [ ] Define the instalation process 
-- [ ] Some kind of trap function
-- [ ] Remove possibility to catch without args
+- [x] Define the instalation process 
+- [x] Remove possibility to catch without args
+- [x] Deal with print bug
+- [ ] Deal with max limit of entries

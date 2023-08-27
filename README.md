@@ -20,7 +20,10 @@ _* got some inspiration from [Harpoon](https://github.com/ThePrimeagen/harpoon).
 
 ## Requirements
 
-- Linux
+Linux
+bash
+Terminal type:
+    - xterm-256color
 
 ## Instalation 
 

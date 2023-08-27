@@ -40,6 +40,7 @@ void _draw(Trap *trap){
     RESET();
   }
 
+  clean();
 }
 
 void _draw_header(char *text, char op) {
@@ -49,6 +50,8 @@ void _draw_header(char *text, char op) {
   ioctl(0, TIOCGWINSZ, &w);
   width = w.ws_col;
   len = strlen(text);
+
+  clean();
 
   for (i = 0; i < (width - len); i++){
     printf(" ");
@@ -70,11 +73,15 @@ void draw_grab(Trap *trap){
   char *text = "  Grab < ";
   _draw_header(text, 'g');
   _draw(trap);
-
 }
 
 void draw_release(Trap *trap){
   char *text = "  Release x ";
   _draw_header(text, 'r');
   _draw(trap);
+}
+
+void clean() {
+  RESET();
+  system("/usr/bin/stty sane");
 }

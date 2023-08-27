@@ -140,7 +140,20 @@ void help_page(void){
   printf("\n");
 }
 
+void sig_handler(int sign) {
+  RESTORE_CURSOR_POS();
+  ERASE_BELOW();
+  clean();
+  exit(2);
+}
+
 int main(int argc, char *argv[]){
+  // hand ctrl + c
+  signal(SIGINT, sig_handler);
+
+  // update view when terminal is resized
+  signal(SIGWINCH, bait);
+
   cmd = ""; 
 
   if (argc > 1) {
@@ -151,8 +164,6 @@ int main(int argc, char *argv[]){
     cmd = "help";
   }
 
-  // update view when terminal is resized
-  signal(SIGWINCH, bait);
   bait();
 
   return EXIT_SUCCESS;

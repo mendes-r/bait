@@ -8,10 +8,8 @@
  */
 void draw_grab(Trap *trap);
 
-/*
- * Draws to the CLI.
- */
 void draw_release(Trap *trap);
 
+void clean();
 
 #endif /* PLOTTER_H */
