@@ -5,7 +5,7 @@ CC=gcc
 CFLAGS=-I$(IDIR) -Wall -pedantic -std=c99
 DEPS=$(IDIR)/. 
 OBJ=bait.c content.c plotter.c
-EXEC=bait
+EXEC=bait-tool
 DEST=/usr/local/bin
 BASHRC=~/.bashrc
 
@@ -23,12 +23,12 @@ r: run
 	@$(BIN)$(EXEC) -r
 
 c: run
-	@$(BIN)$(EXEC)
+	@$(BIN)$(EXEC) -c
 
 h: run
 	@$(BIN)$(EXEC) -h
 
 install: run
-	@strip --strip-all ./$(EXEC)
-	mv ./$(EXEC) $(DEST) 
-	echo "alias bait='eval $$(bait 3>&1 1>&2 2>&3)'" >> ~/.bashrc
+	@strip --strip-all $(BIN)$(EXEC)
+	mv $(BIN)$(EXEC) $(DEST) 
+

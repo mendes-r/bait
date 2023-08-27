@@ -26,7 +26,7 @@ int get_input();
 char *cmd;
 
 void bait(){
-  if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "") == 0){
+  if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "-c") == 0){
     catch();
   } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "-r") == 0){
     release();
@@ -134,7 +134,7 @@ void help_page(void){
 
   printf("\n");
   printf("\thelp | -h\n");
-  printf("\tcatch | <empty>\n");
+  printf("\tcatch | -c\n");
   printf("\trelease | -r\n");
   printf("\tgrab | -g ... press 'q' to exit\n");
   printf("\n");

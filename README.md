@@ -22,6 +22,20 @@ _* got some inspiration from [Harpoon](https://github.com/ThePrimeagen/harpoon).
 
 - Linux
 
-## Instalation
+## Instalation 
 
-__!! Still under construction !!__
+Run the following command:
+
+```sh
+$ cd src
+$ sudo make install
+```
+
+... afterwards, add the this function to the _.bashrc_ file:
+
+```sh
+bait() {
+  eval $(bait-tool $1 3>&1 1>&2 2>&3)
+}
+```
+

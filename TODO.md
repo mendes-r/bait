@@ -6,3 +6,5 @@
 - [x] Add information to the user
 - [x] Improve TUI
 - [ ] Define the instalation process 
+- [ ] Some kind of trap function
+- [ ] Remove possibility to catch without args
