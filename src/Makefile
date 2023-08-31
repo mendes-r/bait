@@ -6,7 +6,7 @@ CFLAGS=-I$(IDIR) -Wall -pedantic -std=c99
 DEPS=$(IDIR)/. 
 OBJ=bait.c content.c plotter.c
 EXEC=bait-tool
-DEST=/usr/local/bin
+DEST=/usr/local/bin/
 BASHRC=~/.bashrc
 
 %.o: %.c $(DEPS)
@@ -15,6 +15,10 @@ BASHRC=~/.bashrc
 run: $(OBJ)
 	@mkdir -p $(BIN)
 	@$(CC) -o $(BIN)$(EXEC) $^ $(CFLAGS)
+
+run-debug: $(OBJ)
+	@mkdir -p $(BIN)
+	@$(CC) -D DEBUG=1 -o $(BIN)$(EXEC) $^ $(CFLAGS)
 
 g: run
 	@$(BIN)$(EXEC) -g
@@ -32,3 +36,5 @@ install: run
 	@strip --strip-all $(BIN)$(EXEC)
 	mv $(BIN)$(EXEC) $(DEST) 
 
+install-debug: run-debug
+	mv $(BIN)$(EXEC) $(DEST) 

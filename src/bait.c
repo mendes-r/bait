@@ -17,6 +17,12 @@
 #define RESTORE_CURSOR_POS() printf("%s", "\0338");
 #define ERASE_BELOW() printf("%s", "\033[0J");
 
+#ifdef DEBUG
+#define DEBUGGER(x) printf ("DEBUG\t\t %s\n", x)
+#else
+#define DEBUGGER(x) do {} while (0)
+#endif
+
 void help_page(void);
 void catch(void);
 void release(void);
@@ -27,12 +33,16 @@ char *cmd;
 
 void bait(){
   if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "-c") == 0){
+    DEBUGGER("Catch init ...");
     catch();
   } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "-r") == 0){
+    DEBUGGER("Release init ...");
     release();
   } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "-g") == 0){
+    DEBUGGER("Grab init ...");
     grab();
   } else{
+    DEBUGGER("Help init ...");
     help_page();
   }
 }
@@ -48,6 +58,9 @@ void catch(void){
     exit(1);
   }
 
+  DEBUGGER("... current directory:");
+  DEBUGGER(curr_dir);
+  
   add_content(&trap, curr_dir);
   export_content(&trap);
 }
@@ -59,7 +72,10 @@ void release(void){
 
   import_content(&trap);
 
+#ifndef DEBUG
   SAVE_CURSOR_POS();
+#endif
+
   draw_release(&trap);
 
   do {
@@ -70,13 +86,23 @@ void release(void){
         rm_content(&trap, i);
         export_content(&trap);
         found = 1;
+
+#ifdef DEBUG
+        char index[15];
+        sprintf(index, "%d", i);
+        DEBUGGER("... remove index:");
+        DEBUGGER(index);
+#endif
+
         break;
       }
     }
   } while (input != LOWER_Q && !found);
 
+#ifndef DEBUG
   RESTORE_CURSOR_POS();
   ERASE_BELOW();
+#endif
 }
 
 void grab(void){
@@ -87,7 +113,10 @@ void grab(void){
 
   import_content(&trap);
 
+#ifndef DEBUG
   SAVE_CURSOR_POS();
+#endif
+
   draw_grab(&trap);
   
   do {
@@ -102,11 +131,16 @@ void grab(void){
     } 
   } while (input != LOWER_Q && !found);
   
+#ifndef DEBUG
   RESTORE_CURSOR_POS();
   ERASE_BELOW();
+#endif
 
-  if (found) 
+  if (found) {
+    DEBUGGER("... grab directory:");
+    DEBUGGER(dir);
     fprintf(stderr, "cd %s\n", dir);
+  }
 }
 
 int get_input(){

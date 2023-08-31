@@ -1,11 +1,3 @@
-- [x] Add all the interaction with the file through header fileio
-- [x] Implement catch function
-- [x] Implement remove function
-- [x] Use fileio to change content; use display to just draw content; 
-- [x] Change fileio -> content / display -> plotter
-- [x] Add information to the user
-- [x] Improve TUI
-- [x] Define the instalation process 
-- [x] Remove possibility to catch without args
-- [x] Deal with print bug
 - [ ] Deal with max limit of entries
+- [ ] Deal with draw bug
+- [x] Add debug print as an option during make
