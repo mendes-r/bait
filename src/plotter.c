@@ -8,10 +8,10 @@
 
 #define H1() printf("%s", "\033[1;30;107m")
 #define TEXT() printf("%s", "\033[0;37m")
-// #define TEXT_GRAB() printf("%s", "\033[1;37m")
-#define TEXT_GRAB() printf("%s", "\033[1;102m")
-// #define TEXT_RELEASE() printf("%s", "\033[1;37m")
-#define TEXT_RELEASE() printf("%s", "\033[1;101m")
+#define TEXT_GRAB() printf("%s", "\033[1;37m")
+// #define TEXT_GRAB() printf("%s", "\033[1;102m")
+#define TEXT_RELEASE() printf("%s", "\033[1;37m")
+// #define TEXT_RELEASE() printf("%s", "\033[1;101m")
 #define RESET() printf("%s", "\033[0m")
 
 int _count_level(char *str, char *element){

@@ -32,13 +32,13 @@ int get_input();
 char *cmd;
 
 void bait(){
-  if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "-c") == 0){
+  if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "c") == 0){
     DEBUGGER("Catch init ...");
     catch();
-  } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "-r") == 0){
+  } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "r") == 0){
     DEBUGGER("Release init ...");
     release();
-  } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "-g") == 0){
+  } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "g") == 0){
     DEBUGGER("Grab init ...");
     grab();
   } else{
@@ -100,8 +100,7 @@ void release(void){
   } while (input != LOWER_Q && !found);
 
   char rows[3];
-  int int_rows = (trap.n_items + 1);
-  sprintf(rows, "%d", int_rows);
+  sprintf(rows, "%d", (trap.n_items + 1));
 
 #ifdef DEBUG
   DEBUGGER("... rows erased:");
@@ -134,8 +133,7 @@ void grab(void){
   } while (input != LOWER_Q && !found);
   
   char rows[3];
-  int int_rows = (trap.n_items + 1);
-  sprintf(rows, "%d", int_rows);
+  sprintf(rows, "%d", (trap.n_items + 1));
   
 #ifdef DEBUG
   DEBUGGER("... rows erased:");
@@ -176,15 +174,22 @@ void help_page(void){
   printf("These are the commands used with 'bait':\n");
 
   printf("\n");
-  printf("\thelp | -h\n");
-  printf("\tcatch | -c\n");
-  printf("\trelease | -r\n");
-  printf("\tgrab | -g ... press 'q' to exit\n");
+  printf("\thelp | h\n");
+  printf("\tcatch | c\n");
+  printf("\trelease | r\n");
+  printf("\tgrab | g\n");
+  printf("\t... press 'q' to exit\n");
   printf("\n");
 }
 
 void sig_handler(int sign) {
-  // MOVE_CURSOR_UP(x);
+  Trap trap;
+  import_content(&trap);
+
+  char rows[3];
+  sprintf(rows, "%d", (trap.n_items + 1));
+
+  MOV_CURSOR_UP(rows);
   ERASE_BELOW();
   clean();
   exit(2);

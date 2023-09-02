@@ -1,2 +1,2 @@
-- [ ] Deal with max limit of entries
-- [x] Add debug print as an option during make
+- [x] Deal with max limit of entries
+- [ ] Add debug print as an option during make
