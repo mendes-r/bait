@@ -7,8 +7,10 @@
 #include <plotter.h>
 
 #define H1() printf("%s", "\033[1;30;107m")
-#define TEXT() printf("%s", "\033[1;37m")
+#define TEXT() printf("%s", "\033[0;37m")
+// #define TEXT_GRAB() printf("%s", "\033[1;37m")
 #define TEXT_GRAB() printf("%s", "\033[1;102m")
+// #define TEXT_RELEASE() printf("%s", "\033[1;37m")
 #define TEXT_RELEASE() printf("%s", "\033[1;101m")
 #define RESET() printf("%s", "\033[0m")
 
@@ -32,15 +34,12 @@ void _draw(Trap *trap){
       printf(" ");
     }
     
-    RESET();
-    printf("  ");
     TEXT();
+    printf("  ");
     printf("%s", trap->content[i]);
     printf("\n");
-    RESET();
   }
 
-  clean();
 }
 
 void _draw_header(char *text, char op) {
@@ -50,8 +49,6 @@ void _draw_header(char *text, char op) {
   ioctl(0, TIOCGWINSZ, &w);
   width = w.ws_col;
   len = strlen(text);
-
-  clean();
 
   for (i = 0; i < (width - len); i++){
     printf(" ");
@@ -66,19 +63,22 @@ void _draw_header(char *text, char op) {
   }
 
   printf("%s\n", text);
-  RESET();
 }
 
 void draw_grab(Trap *trap){
   char *text = "  Grab < ";
+  clean();
   _draw_header(text, 'g');
   _draw(trap);
+  clean();
 }
 
 void draw_release(Trap *trap){
   char *text = "  Release x ";
+  clean();
   _draw_header(text, 'r');
   _draw(trap);
+  clean();
 }
 
 void clean() {

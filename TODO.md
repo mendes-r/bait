@@ -1,3 +1,2 @@
 - [ ] Deal with max limit of entries
-- [ ] Deal with draw bug
 - [x] Add debug print as an option during make

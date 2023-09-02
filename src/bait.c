@@ -13,9 +13,9 @@
 #define LOWER_Q 65 // 113 ascii - 48 offset
 
 // src: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-#define SAVE_CURSOR_POS() printf("%s", "\0337");
-#define RESTORE_CURSOR_POS() printf("%s", "\0338");
-#define ERASE_BELOW() printf("%s", "\033[0J");
+#define MOV_CURSOR_UP(x) printf("\033[%sA", x)
+#define ERASE_BELOW() printf("%s", "\033[0J")
+#define RESET() printf("%s", "\033[0m")
 
 #ifdef DEBUG
 #define DEBUGGER(x) printf ("DEBUG\t\t %s\n", x)
@@ -61,6 +61,11 @@ void catch(void){
   DEBUGGER("... current directory:");
   DEBUGGER(curr_dir);
   
+  if (trap.n_items >= SIZE_LIMIT) {
+    fprintf(stdout, "Limit reached. Release a entry.\n");
+    exit(0);
+  }
+
   add_content(&trap, curr_dir);
   export_content(&trap);
 }
@@ -71,11 +76,6 @@ void release(void){
   int input, i;
 
   import_content(&trap);
-
-#ifndef DEBUG
-  SAVE_CURSOR_POS();
-#endif
-
   draw_release(&trap);
 
   do {
@@ -99,8 +99,15 @@ void release(void){
     }
   } while (input != LOWER_Q && !found);
 
-#ifndef DEBUG
-  RESTORE_CURSOR_POS();
+  char rows[3];
+  int int_rows = (trap.n_items + 1);
+  sprintf(rows, "%d", int_rows);
+
+#ifdef DEBUG
+  DEBUGGER("... rows erased:");
+  DEBUGGER(rows);
+#else
+  MOV_CURSOR_UP(rows);
   ERASE_BELOW();
 #endif
 }
@@ -112,11 +119,6 @@ void grab(void){
   short found = 0;
 
   import_content(&trap);
-
-#ifndef DEBUG
-  SAVE_CURSOR_POS();
-#endif
-
   draw_grab(&trap);
   
   do {
@@ -131,8 +133,15 @@ void grab(void){
     } 
   } while (input != LOWER_Q && !found);
   
-#ifndef DEBUG
-  RESTORE_CURSOR_POS();
+  char rows[3];
+  int int_rows = (trap.n_items + 1);
+  sprintf(rows, "%d", int_rows);
+  
+#ifdef DEBUG
+  DEBUGGER("... rows erased:");
+  DEBUGGER(rows);
+#else
+  MOV_CURSOR_UP(rows);
   ERASE_BELOW();
 #endif
 
@@ -175,7 +184,7 @@ void help_page(void){
 }
 
 void sig_handler(int sign) {
-  RESTORE_CURSOR_POS();
+  // MOVE_CURSOR_UP(x);
   ERASE_BELOW();
   clean();
   exit(2);
@@ -199,6 +208,5 @@ int main(int argc, char *argv[]){
   }
 
   bait();
-
   return EXIT_SUCCESS;
 }
