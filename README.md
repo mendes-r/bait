@@ -12,9 +12,17 @@ Throw the _bait_ and catch the most used directories.
 
 __Bait__ is a small CLI tool that _catches_ the current working directory every time you call the command.
 
+![bait-c](./resources/bait-c.png)
+
 You can review yours _catches_ and jump instantaneously to those directories.
 
+![bait-g](./resources/bait-g.png)
+
 The _catches_ are permanent and not tied to a specific session.
+
+All entries can also be easily removed.
+
+![bait-r](./resources/bait-r.png)
 
 _* got some inspiration from [Harpoon](https://github.com/ThePrimeagen/harpoon)._
 
@@ -24,14 +32,14 @@ Linux, bash
 
 Terminal type:
 
-- xterm-256color
+- xterm ...
+- (maybe more, but not tested)
 
 ## Instalation 
 
-Run the following command:
+Run the following command inside the src folder:
 
 ```sh
-$ cd src
 $ sudo make install
 ```
 
@@ -39,7 +47,12 @@ $ sudo make install
 
 ```sh
 bait() {
-  eval $(bait-tool $1 3>&1 1>&2 2>&3)
+  eval $(bait-tool $1 3>&1 1>&2 2>&3) 2> /dev/null
 }
 ```
+
+The better way to init the bait script is to run the __catch__ command.
+
+By doing so, you will start by creating the file that will persist your data.
+
 

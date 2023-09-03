@@ -5,7 +5,7 @@
 #include <content.h>
 
 #define HOME "HOME"
-#define BAIT_RC "/.baitrc"
+#define BAIT_RC "/.bait.list"
 #define BUFSIZE 500
 #define EMPTY ""
 
@@ -18,8 +18,7 @@ FILE *_open_file(char *mode){
 
   file = fopen(config_dir, mode);
   if (file == NULL){
-    perror("Error opening file in home directory.\n");
-    return NULL;
+    fprintf(stderr, "Error opening file in home directory.\n");
   }
 
   return file;
@@ -27,7 +26,7 @@ FILE *_open_file(char *mode){
 
 int add_content(Trap *trap, char *item){
   if (trap->n_items > SIZE_LIMIT){
-    perror("The number of items was exceeded.");
+    fprintf(stderr, "The number of items was exceeded.");
     return -1;
   }
   trap->content[trap->n_items] = item;
@@ -76,7 +75,6 @@ int import_content(Trap *trap){
   trap->content[0] = realloc(buffer, strlen(buffer));
   trap->n_items = index;
 
-  // TODO confirm that file was closed
   fclose(file);
   return 0;
 }

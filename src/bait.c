@@ -102,10 +102,10 @@ void release(void){
   char rows[3];
   sprintf(rows, "%d", (trap.n_items + 1));
 
-#ifdef DEBUG
   DEBUGGER("... rows erased:");
   DEBUGGER(rows);
-#else
+
+#ifndef DEBUG
   MOV_CURSOR_UP(rows);
   ERASE_BELOW();
 #endif
@@ -135,10 +135,10 @@ void grab(void){
   char rows[3];
   sprintf(rows, "%d", (trap.n_items + 1));
   
-#ifdef DEBUG
   DEBUGGER("... rows erased:");
   DEBUGGER(rows);
-#else
+
+#ifndef DEBUG
   MOV_CURSOR_UP(rows);
   ERASE_BELOW();
 #endif
