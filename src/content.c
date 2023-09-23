@@ -9,6 +9,13 @@
 #define BUFSIZE 500
 #define EMPTY ""
 
+
+#ifdef DEBUG
+#define DEBUGGER(x) printf ("DEBUG\t\t %s\n", x)
+#else
+#define DEBUGGER(x) do {} while (0)
+#endif
+
 FILE *_open_file(char *mode){
   FILE * file;
   char config_dir[BUFSIZE];
@@ -66,8 +73,11 @@ int import_content(Trap *trap){
   buffer= (char *) malloc(size);
   fgets(buffer, size, file);
 
+  DEBUGGER("Reading file ...");
+
   for (item = strtok(buffer, ","); (item != NULL && index < SIZE_LIMIT); item = strtok(NULL, ",")){
     trap->content[index] = item;
+    DEBUGGER(trap->content[index]);
     index++;
   }
 

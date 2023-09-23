@@ -14,6 +14,12 @@
 // #define TEXT_RELEASE() printf("%s", "\033[1;101m")
 #define RESET() printf("%s", "\033[0m")
 
+#ifdef DEBUG
+#define DEBUGGER(x) printf ("DEBUG\t\t %s\n", x)
+#else
+#define DEBUGGER(x) do {} while (0)
+#endif
+
 int _count_level(char *str, char *element){
   int level;
   for (level = 0; str[level]; str[level]=='/' ? level++ : *str++);
@@ -21,9 +27,13 @@ int _count_level(char *str, char *element){
 }
 
 void _draw(Trap *trap){
+  
+  DEBUGGER("Start drawing ...");
 
   for (int i = 0; i < trap->n_items; i++){
-   
+    
+    DEBUGGER(trap->content[i]);
+
     char *item = trap->content[i];
     int level = _count_level(item, "/");
 
