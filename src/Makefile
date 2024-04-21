@@ -16,10 +16,6 @@ run: $(OBJ)
 	@mkdir -p $(BIN)
 	@$(CC) -o $(BIN)$(EXEC) $^ $(CFLAGS)
 
-run-debug: $(OBJ)
-	@mkdir -p $(BIN)
-	@$(CC) -D DEBUG=1 -o $(BIN)$(EXEC) $^ $(CFLAGS)
-
 g: run
 	@$(BIN)$(EXEC) g
 
@@ -35,6 +31,10 @@ h: run
 install: run
 	@strip --strip-all $(BIN)$(EXEC)
 	mv $(BIN)$(EXEC) $(DEST) 
+
+run-debug: $(OBJ)
+	@mkdir -p $(BIN)
+	@$(CC) -D DEBUG=1 -o $(BIN)$(EXEC) $^ $(CFLAGS)
 
 install-debug: run-debug
 	mv $(BIN)$(EXEC) $(DEST) 

@@ -43,9 +43,10 @@ Run the following command inside the src folder:
 $ sudo make install
 ```
 
-... afterwards, add the this function to the _.bashrc_ file:
+... afterwards, add this function to the _.bashrc_ file:
 
 ```sh
+# I know that this is manhoso!
 bait() {
   eval $(bait-tool $1 3>&1 1>&2 2>&3) 2> /dev/null
 }
