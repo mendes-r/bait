@@ -58,8 +58,7 @@ int rm_content(Trap *trap, int index){
 int import_content(Trap *trap){
   FILE *file;
   int index = 0;
-  // TODO define max length
-  char line[256];
+  char line[BUFSIZE];
   
   file = _open_file("r"); 
   if (file == NULL) {
@@ -70,8 +69,8 @@ int import_content(Trap *trap){
   DEBUGGER("<<<<<");
 
   while (fgets(line, sizeof(line), file)) {
-    // TODO define max length
-    char *item = (char *) malloc(256);
+    // TODO check if line exceeds buffer size
+    char *item = (char *) malloc(BUFSIZE);
     strncpy(item, line, strlen(line)-1);
     trap->content[index] = item;
     DEBUGGER(trap->content[index]);
