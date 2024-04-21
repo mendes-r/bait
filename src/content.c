@@ -57,32 +57,27 @@ int rm_content(Trap *trap, int index){
 
 int import_content(Trap *trap){
   FILE *file;
-  char *buffer, *item;
-  long size;
   int index = 0;
+  // TODO define max length
+  char line[256];
   
   file = _open_file("r"); 
   if (file == NULL) {
     return -1;
   }
 
-  fseek(file, 0, SEEK_END);
-  size = ftell(file);
-  fseek(file, 0, SEEK_SET);
-
-  buffer= (char *) malloc(size);
-  fgets(buffer, size, file);
-
   DEBUGGER("Reading file ...");
+  DEBUGGER("<<<<<");
 
-  for (item = strtok(buffer, ","); (item != NULL && index < SIZE_LIMIT); item = strtok(NULL, ",")){
+  while (fgets(line, sizeof(line), file)) {
+    // TODO define max length
+    char *item = (char *) malloc(256);
+    strncpy(item, line, strlen(line)-1);
     trap->content[index] = item;
     DEBUGGER(trap->content[index]);
     index++;
   }
 
-  // TODO Because cannot persist the first token
-  trap->content[0] = realloc(buffer, strlen(buffer));
   trap->n_items = index;
 
   fclose(file);
@@ -97,10 +92,14 @@ int export_content(Trap *trap){
     return -1;
   }
 
+  DEBUGGER("Exporting file ...");
+  DEBUGGER(">>>>>");
+  
   for(int i = 0; i < trap->n_items; i++){
     char *item = trap->content[i];
     if (strcmp(item, EMPTY) != 0){
-      fprintf(file, "%s,", trap->content[i]);
+      DEBUGGER(item);
+      fprintf(file, "%s\n", item);
     }
   }
 

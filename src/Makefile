@@ -21,16 +21,16 @@ run-debug: $(OBJ)
 	@$(CC) -D DEBUG=1 -o $(BIN)$(EXEC) $^ $(CFLAGS)
 
 g: run
-	@$(BIN)$(EXEC) -g
+	@$(BIN)$(EXEC) g
 
 r: run
-	@$(BIN)$(EXEC) -r
+	@$(BIN)$(EXEC) r
 
 c: run
-	@$(BIN)$(EXEC) -c
+	@$(BIN)$(EXEC) c
 
 h: run
-	@$(BIN)$(EXEC) -h
+	@$(BIN)$(EXEC) h
 
 install: run
 	@strip --strip-all $(BIN)$(EXEC)
