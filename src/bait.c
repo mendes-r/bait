@@ -4,11 +4,11 @@
 #include <unistd.h>
 #include <signal.h>
 #include <termios.h>
-
 #include <plotter.h>
 #include <content.h>
 
-#define BUFSIZE 500
+#define CMD_SIZE 10
+#define BUFF_SIZE 500
 #define ASCII_OFFSET 48
 #define LOWER_Q 65 // 113 ascii - 48 offset
 
@@ -28,17 +28,15 @@ void catch(void);
 void release(void);
 void grab(void);
 int get_input();
-
-char *cmd;
-
-void bait(){
-  if (strcmp(cmd, "catch") == 0 || strcmp(cmd, "c") == 0){
+int starts_with(char *, char*);
+void bait(char *cmd){
+  if (strcmp(cmd, "--catch") == 0 || strcmp(cmd, "c") == 0){
     DEBUGGER("Catch init ...");
     catch();
-  } else if (strcmp(cmd, "release") == 0 || strcmp(cmd, "r") == 0){
+  } else if (strcmp(cmd, "--release") == 0 || strcmp(cmd, "r") == 0){
     DEBUGGER("Release init ...");
     release();
-  } else if (strcmp(cmd, "grab") == 0 || strcmp(cmd, "g") == 0){
+  } else if (strcmp(cmd, "--grab") == 0 || starts_with("g", cmd) || strcmp(cmd, "g") == 0){
     DEBUGGER("Grab init ...");
     grab();
   } else{
@@ -49,7 +47,7 @@ void bait(){
 
 void catch(void){
   Trap trap;
-  char curr_dir[BUFSIZE];
+  char curr_dir[BUFF_SIZE];
 
   import_content(&trap);
 
@@ -121,6 +119,7 @@ void grab(void){
   draw_grab(&trap);
   
   do {
+
     input = get_input();
     
     for (i = 0; i < trap.n_items; i++){
@@ -135,9 +134,6 @@ void grab(void){
   char rows[3];
   sprintf(rows, "%d", (trap.n_items + 1));
   
-  DEBUGGER("... rows erased:");
-  DEBUGGER(rows);
-
 #ifndef DEBUG
   MOV_CURSOR_UP(rows);
   ERASE_BELOW();
@@ -148,6 +144,10 @@ void grab(void){
     DEBUGGER(dir);
     fprintf(stderr, "cd %s\n", dir);
   }
+}
+
+int starts_with(char *pre, char *str){
+    return strncmp(pre, str, strlen(pre)) == 0;
 }
 
 int get_input(){
@@ -174,10 +174,10 @@ void help_page(void){
   printf("These are the commands used with 'bait':\n");
 
   printf("\n");
-  printf("\thelp | h\n");
-  printf("\tcatch | c\n");
-  printf("\trelease | r\n");
-  printf("\tgrab | g\n");
+  printf("\t--help | h\n");
+  printf("\t--catch | c\n");
+  printf("\t--release | r\n");
+  printf("\t--grab | g\n");
   printf("\t... press 'q' to exit\n");
   printf("\n");
 }
@@ -196,22 +196,21 @@ void sig_handler(int sign) {
 }
 
 int main(int argc, char *argv[]){
+  char *cmd = (char *) malloc(CMD_SIZE); 
+
   // hand ctrl + c
   signal(SIGINT, sig_handler);
 
   // update view when terminal is resized
-  signal(SIGWINCH, bait);
+  // signal(SIGWINCH, bait);
 
-  cmd = ""; 
-
-  if (argc > 1) {
-    cmd = argv[1];
-  }
-
-  if (strlen(cmd) > BUFSIZE) {
+  if (strlen(argv[1]) > CMD_SIZE || argc < 1) {
     cmd = "help";
+  } else {
+    cmd = argv[1];
+    // TODO if g3 retrieve the 3
   }
-
-  bait();
+  
+  bait(cmd);
   return EXIT_SUCCESS;
 }
