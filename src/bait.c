@@ -26,9 +26,10 @@
 void help_page(void);
 void catch(void);
 void release(void);
-void grab(void);
+void grab(int index);
 int get_input();
 int starts_with(char *, char*);
+
 void bait(char *cmd){
   if (strcmp(cmd, "--catch") == 0 || strcmp(cmd, "c") == 0){
     DEBUGGER("Catch init ...");
@@ -36,9 +37,13 @@ void bait(char *cmd){
   } else if (strcmp(cmd, "--release") == 0 || strcmp(cmd, "r") == 0){
     DEBUGGER("Release init ...");
     release();
-  } else if (strcmp(cmd, "--grab") == 0 || starts_with("g", cmd) || strcmp(cmd, "g") == 0){
+  } else if (strcmp(cmd, "--grab") == 0 || starts_with("g", cmd)){
     DEBUGGER("Grab init ...");
-    grab();
+    char *sub = cmd + 1;
+    DEBUGGER("Selected index as string:");
+    DEBUGGER(sub);
+    int index = atoi(sub);
+    grab(index);
   } else{
     DEBUGGER("Help init ...");
     help_page();
@@ -109,35 +114,38 @@ void release(void){
 #endif
 }
 
-void grab(void){
+void grab(int index){
   Trap trap;
   int input, i;
   char *dir;
   short found = 0;
 
   import_content(&trap);
-  draw_grab(&trap);
-  
-  do {
+ 
+  if (index != 0 && index < trap.n_items) {
+    dir = trap.content[index - 1];
+    found = 1;
+  } else {
+    draw_grab(&trap);
+    do {
+      input = get_input();
+      for (i = 0; i < trap.n_items; i++){
+        if ((input - 1) == i) {
+          dir = trap.content[i];
+          found = 1;
+          break;
+        }
+      } 
+    } while (input != LOWER_Q && !found);
 
-    input = get_input();
-    
-    for (i = 0; i < trap.n_items; i++){
-      if (input == i) {
-        dir = trap.content[i];
-        found = 1;
-        break;
-      }
-    } 
-  } while (input != LOWER_Q && !found);
-  
-  char rows[3];
-  sprintf(rows, "%d", (trap.n_items + 1));
+    char rows[3];
+    sprintf(rows, "%d", (trap.n_items + 1));
   
 #ifndef DEBUG
-  MOV_CURSOR_UP(rows);
-  ERASE_BELOW();
+    MOV_CURSOR_UP(rows);
+    ERASE_BELOW();
 #endif
+  }
 
   if (found) {
     DEBUGGER("... grab directory:");
@@ -177,7 +185,7 @@ void help_page(void){
   printf("\t--help | h\n");
   printf("\t--catch | c\n");
   printf("\t--release | r\n");
-  printf("\t--grab | g\n");
+  printf("\t--grab | g | g2 to grab entry n. 2\n");
   printf("\t... press 'q' to exit\n");
   printf("\n");
 }
@@ -208,7 +216,6 @@ int main(int argc, char *argv[]){
     cmd = "help";
   } else {
     cmd = argv[1];
-    // TODO if g3 retrieve the 3
   }
   
   bait(cmd);

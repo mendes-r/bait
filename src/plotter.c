@@ -38,7 +38,7 @@ void _draw(Trap *trap){
     int level = _count_level(item, "/");
 
     H1();
-    printf("[%d]", i);
+    printf("[%d]", i + 1);
     
     for(int j = 0; j < level; j++){
       printf(" ");
