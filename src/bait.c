@@ -121,8 +121,15 @@ void grab(int index){
   short found = 0;
 
   import_content(&trap);
- 
-  if (index != 0 && index < trap.n_items) {
+
+#ifdef DEBUG
+  DEBUGGER("Number of itens in file:");
+  char str[5];
+  sprintf(str, "%d", trap.n_items);
+  DEBUGGER(str);
+#endif
+
+  if (index != 0 && index <= trap.n_items) {
     dir = trap.content[index - 1];
     found = 1;
   } else {
